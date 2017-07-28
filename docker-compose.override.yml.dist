@@ -61,6 +61,7 @@ services:
         window: 10s
     environment:
       - TERM
+    image: quay.io/tripviss/tripviss-monitoring:node-exporter
     networks:
       - default
     ports:

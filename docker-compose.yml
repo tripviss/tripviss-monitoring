@@ -21,17 +21,17 @@ services:
       mode: global
 
   node-exporter:
+    build:
+      context: ./docker/node-exporter
+      dockerfile: ./Dockerfile
     command:
-      - -collector.procfs
-      - /host/proc
-      - -collector.sysfs
-      - /host/sys
-      - -collector.filesystem.ignored-mount-points
-      - ^/(sys|proc|dev|host|etc)($$|/)
+      - -collector.procfs=/host/proc
+      - -collector.sysfs=/host/sys
+      - -collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)
+      - -collector.textfile.directory=/var/lib/prometheus/node-exporter
     deploy:
       endpoint_mode: dnsrr
       mode: global
-    image: quay.io/prometheus/node-exporter
     volumes:
       - /:/rootfs:ro
       - /proc:/host/proc:ro
