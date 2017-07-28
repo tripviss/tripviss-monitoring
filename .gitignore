@@ -1,0 +1,15 @@
+*.log
+/data/
+
+# Docker
+.env
+docker-compose.override.yml
+docker-stack.*.yml
+
+# OS
+*.DS_Store
+._*
+Thumbs.db
+
+# IDE
+*.sublime-workspace

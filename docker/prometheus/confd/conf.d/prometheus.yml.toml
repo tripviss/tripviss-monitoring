@@ -1,0 +1,11 @@
+[template]
+src = "prometheus.yml.tmpl"
+dest = "/etc/prometheus/prometheus.yml"
+keys = [
+    "/cadvisor/host",
+    "/cadvisor/port",
+    "/docker/host",
+    "/docker/port",
+    "/node/exporter/host",
+    "/node/exporter/port",
+]

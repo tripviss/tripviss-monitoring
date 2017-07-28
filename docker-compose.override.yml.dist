@@ -1,0 +1,99 @@
+version: '3.2'
+
+services:
+  cadvisor:
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints:
+          - node.id == $DOCKER_NODE_ID
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+      restart_policy:
+        condition: any
+        delay: 5s
+        window: 10s
+    environment:
+      - TERM
+    healthcheck:
+      interval: 30s
+      retries: 3
+      timeout: 30s
+    networks:
+      - default
+    ports:
+      - mode: host
+        protocol: tcp
+        published: 8080
+        target: 8080
+    restart: always
+
+  node-exporter:
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints:
+          - node.id == $DOCKER_NODE_ID
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+      restart_policy:
+        condition: any
+        delay: 5s
+        window: 10s
+    environment:
+      - TERM
+    healthcheck:
+      interval: 30s
+      retries: 3
+      timeout: 30s
+    networks:
+      - default
+    ports:
+      - mode: host
+        protocol: tcp
+        published: 9100
+        target: 9100
+    restart: always
+
+  prometheus:
+    deploy:
+      endpoint_mode: dnsrr
+      placement:
+        constraints:
+          - node.id == $DOCKER_NODE_ID
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+      restart_policy:
+        condition: any
+        delay: 5s
+        window: 10s
+    env_file: ./docker/prometheus/.env
+    environment:
+      - TERM
+    healthcheck:
+      interval: 30s
+      retries: 3
+      timeout: 30s
+    image: quay.io/tripviss/tripviss-monitoring:prometheus
+    networks:
+      - default
+    ports:
+      - mode: host
+        protocol: tcp
+        published: 9090
+        target: 9090
+    restart: always
+    volumes:
+      # - ./docker/prometheus/confd:/usr/local/etc/confd:ro
+      - ./docker/prometheus/data:/prometheus:rw
+
+networks:
+  default: {}
+  tripvissnginxproxy_default:
+    external: true

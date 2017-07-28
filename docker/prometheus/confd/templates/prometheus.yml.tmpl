@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+  external_labels:
+    monitor: 'tripviss-monitor'
+
+scrape_configs:
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['{{getv "/cadvisor/host"}}:{{getv "/cadvisor/port"}}']
+
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['{{getv "/docker/host"}}:{{getv "/docker/port"}}']
+
+  - job_name: 'node'
+    static_configs:
+      - targets: ['{{getv "/node/exporter/host"}}:{{getv "/node/exporter/port"}}']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
