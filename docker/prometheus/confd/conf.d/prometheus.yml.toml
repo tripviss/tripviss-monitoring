@@ -4,8 +4,10 @@ dest = "/etc/prometheus/prometheus.yml"
 keys = [
     "/cadvisor/host",
     "/cadvisor/port",
-    "/docker/host",
-    "/docker/port",
+    "/docker/exporter/host",
+    "/docker/exporter/port",
     "/node/exporter/host",
     "/node/exporter/port",
+    "/prometheus/host",
+    "/prometheus/port",
 ]

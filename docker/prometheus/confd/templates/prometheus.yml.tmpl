@@ -8,17 +8,25 @@ global:
 
 scrape_configs:
   - job_name: 'cadvisor'
-    static_configs:
-      - targets: ['{{getv "/cadvisor/host"}}:{{getv "/cadvisor/port"}}']
+    dns_sd_configs:
+      - names: ['{{getv "/cadvisor/host"}}']
+        type: 'A'
+        port: {{getv "/cadvisor/port"}}
 
   - job_name: 'docker'
-    static_configs:
-      - targets: ['{{getv "/docker/host"}}:{{getv "/docker/port"}}']
+    dns_sd_configs:
+      - names: ['{{getv "/docker/exporter/host"}}']
+        type: 'A'
+        port: {{getv "/docker/exporter/port"}}
 
   - job_name: 'node'
-    static_configs:
-      - targets: ['{{getv "/node/exporter/host"}}:{{getv "/node/exporter/port"}}']
+    dns_sd_configs:
+      - names: ['{{getv "/node/exporter/host"}}']
+        type: 'A'
+        port: {{getv "/node/exporter/port"}}
 
   - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
+    dns_sd_configs:
+      - names: ['{{getv "/prometheus/host"}}']
+        type: 'A'
+        port: {{getv "/prometheus/port"}}

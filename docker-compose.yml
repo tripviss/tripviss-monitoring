@@ -2,12 +2,23 @@ version: '3.2'
 
 services:
   cadvisor:
+    deploy:
+      endpoint_mode: dnsrr
+      mode: global
     image: google/cadvisor
     volumes:
       - /:/rootfs:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /var/run:/var/run:rw
+
+  docker-exporter:
+    build:
+      context: ./docker/docker-exporter
+      dockerfile: ./Dockerfile
+    deploy:
+      endpoint_mode: dnsrr
+      mode: global
 
   node-exporter:
     command:
@@ -17,6 +28,9 @@ services:
       - /host/sys
       - -collector.filesystem.ignored-mount-points
       - ^/(sys|proc|dev|host|etc)($$|/)
+    deploy:
+      endpoint_mode: dnsrr
+      mode: global
     image: quay.io/prometheus/node-exporter
     volumes:
       - /:/rootfs:ro
@@ -27,3 +41,6 @@ services:
     build:
       context: ./docker/prometheus
       dockerfile: ./Dockerfile
+    deploy:
+      endpoint_mode: dnsrr
+      mode: replicated

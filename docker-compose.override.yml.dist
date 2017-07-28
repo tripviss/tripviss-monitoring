@@ -3,24 +3,19 @@ version: '3.2'
 services:
   cadvisor:
     deploy:
-      endpoint_mode: dnsrr
-      placement:
-        constraints:
-          - node.id == $DOCKER_NODE_ID
       resources:
         limits:
-          cpus: '1.0'
-          memory: 1G
+          cpus: '0.10'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
       restart_policy:
         condition: any
         delay: 5s
         window: 10s
     environment:
       - TERM
-    healthcheck:
-      interval: 30s
-      retries: 3
-      timeout: 30s
     networks:
       - default
     ports:
@@ -30,26 +25,42 @@ services:
         target: 8080
     restart: always
 
-  node-exporter:
+  docker-exporter:
     deploy:
-      endpoint_mode: dnsrr
-      placement:
-        constraints:
-          - node.id == $DOCKER_NODE_ID
       resources:
         limits:
-          cpus: '1.0'
-          memory: 1G
+          cpus: '0.05'
+          memory: 6M
+        reservations:
+          cpus: '0.05'
+          memory: 4M
+      restart_policy:
+        condition: any
+        delay: 5s
+        window: 10s
+    env_file: ./docker/docker-exporter/.env
+    environment:
+      - TERM
+    image: quay.io/tripviss/tripviss-monitoring:docker-exporter
+    networks:
+      - default
+    restart: always
+
+  node-exporter:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 32M
+        reservations:
+          cpus: '0.10'
+          memory: 16M
       restart_policy:
         condition: any
         delay: 5s
         window: 10s
     environment:
       - TERM
-    healthcheck:
-      interval: 30s
-      retries: 3
-      timeout: 30s
     networks:
       - default
     ports:
@@ -61,14 +72,13 @@ services:
 
   prometheus:
     deploy:
-      endpoint_mode: dnsrr
-      placement:
-        constraints:
-          - node.id == $DOCKER_NODE_ID
       resources:
         limits:
-          cpus: '1.0'
+          cpus: '0.50'
           memory: 1G
+        reservations:
+          cpus: '0.50'
+          memory: 128M
       restart_policy:
         condition: any
         delay: 5s
@@ -76,10 +86,6 @@ services:
     env_file: ./docker/prometheus/.env
     environment:
       - TERM
-    healthcheck:
-      interval: 30s
-      retries: 3
-      timeout: 30s
     image: quay.io/tripviss/tripviss-monitoring:prometheus
     networks:
       - default
