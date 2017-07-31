@@ -46,6 +46,28 @@ services:
       - default
     restart: always
 
+  grafana:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 64M
+        reservations:
+          cpus: '0.50'
+          memory: 32M
+    env_file: ./docker/grafana/.env
+    environment:
+      - LETSENCRYPT_EMAIL=dev@tripviss.com
+      - LETSENCRYPT_HOST=
+      - TERM
+      - VIRTUAL_HOST=status.tripviss.com
+    networks:
+      - default
+      - tripvissnginxproxy_default
+    restart: always
+    volumes:
+      - ./docker/grafana/data:/var/lib/grafana:rw
+
   node-exporter:
     deploy:
       resources:

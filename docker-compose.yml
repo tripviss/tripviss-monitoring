@@ -20,6 +20,11 @@ services:
       endpoint_mode: dnsrr
       mode: global
 
+  grafana:
+    deploy:
+      mode: replicated
+    image: grafana/grafana
+
   node-exporter:
     build:
       context: ./docker/node-exporter
